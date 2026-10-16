@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>hostingguide.virtualsociety — host your own site, step by step</title>
+<meta name="description" content="The complete, tested process for putting a plain HTML site on GitHub Pages and pointing a web3 domain at it. Every click screenshotted, every trap documented.">
+<meta name="theme-color" content="#ffffff">
+<style>
+:root{
+  --ink:#14161c; --ink-2:#3d4250; --muted:#6b7180; --line:#dfe3ea; --line-2:#eef1f5;
+  --bg:#ffffff; --soft:#f7f9fc; --accent:#1f4fd8; --accent-soft:#e8eeff;
+  --warn:#b3380f; --warn-bg:#fdeee7; --ok:#0b6b4f; --ok-bg:#e2f4ec;
+  --mono:ui-monospace,"SFMono-Regular",Menlo,Consolas,"Liberation Mono",monospace;
+  --sans:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+  --max:980px; --pad:22px;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0; background:var(--bg); color:var(--ink);
+  font-family:var(--sans); font-size:17px; line-height:1.68;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{width:100%;max-width:var(--max);margin-inline:auto;padding-inline:var(--pad)}
+h1,h2,h3{line-height:1.14;letter-spacing:-.021em;margin:0}
+p{margin:0 0 1rem}
+a{color:var(--accent)}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:4px}
+.skip{position:absolute;left:-9999px;top:0;background:var(--ink);color:#fff;padding:.6rem 1rem;font-family:var(--mono)}
+.skip:focus{left:0}
+code{font-family:var(--mono);font-size:.88em;background:var(--accent-soft);border:1px solid var(--line);padding:.06rem .32rem;border-radius:3px}
+pre{background:var(--ink);color:#e9edf5;border-radius:10px;padding:1rem 1.15rem;overflow-x:auto;font-family:var(--mono);font-size:.85rem;line-height:1.66;margin:0 0 1.4rem}
+pre code{background:none;border:0;padding:0;color:inherit;font-size:inherit}
+
+/* header */
+header{border-bottom:1px solid var(--line);background:var(--bg);position:sticky;top:0;z-index:50}
+.nav{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding-block:14px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:.6rem;font-family:var(--mono);font-weight:700;font-size:.92rem;text-decoration:none;color:var(--ink)}
+.mark{width:11px;height:11px;background:var(--accent);border-radius:2px;display:inline-block}
+.links{display:flex;gap:1.15rem;flex-wrap:wrap}
+.links a{font-family:var(--mono);font-size:.75rem;text-transform:uppercase;letter-spacing:.09em;text-decoration:none;color:var(--muted);padding-bottom:2px;border-bottom:2px solid transparent}
+.links a:hover{color:var(--accent);border-color:var(--accent)}
+
+/* hero */
+.hero{padding-block:clamp(40px,7vw,76px) clamp(24px,4vw,40px)}
+.eyebrow{display:inline-block;font-family:var(--mono);font-size:.72rem;text-transform:uppercase;letter-spacing:.11em;color:var(--accent);background:var(--accent-soft);border:1px solid var(--line);padding:.3rem .6rem;border-radius:999px;margin:0 0 1.5rem}
+h1{font-size:clamp(2rem,5.6vw,3.2rem);font-weight:800;margin-bottom:1.1rem;letter-spacing:-.03em}
+h1 .mark-w{background:var(--accent);color:#fff;padding:0 .16em;border-radius:4px}
+.lede{font-size:clamp(1rem,2.1vw,1.14rem);color:var(--muted);max-width:60ch}
+.hero-actions{display:flex;gap:.7rem;flex-wrap:wrap;margin-top:1.9rem}
+.btn{display:inline-block;font-family:var(--mono);font-size:.8rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;text-decoration:none;padding:.78rem 1.35rem;border-radius:8px;border:1px solid var(--ink);background:var(--ink);color:#fff;transition:transform .14s,box-shadow .14s}
+.btn:hover{transform:translateY(-2px);box-shadow:0 6px 18px -8px rgba(20,22,28,.5)}
+.btn-ghost{background:#fff;color:var(--ink)}
+.hero-note{font-family:var(--mono);font-size:.78rem;color:var(--muted);margin:1.1rem 0 0}
+
+/* steps */
+.step{border-top:1px solid var(--line);padding-block:clamp(38px,6vw,68px)}
+.step:last-of-type{border-bottom:1px solid var(--line)}
+.step-head{display:flex;align-items:baseline;gap:.85rem;margin-bottom:1.5rem;flex-wrap:wrap}
+.step-n{font-family:var(--mono);font-weight:700;font-size:.8rem;background:var(--accent);color:#fff;padding:.26rem .55rem;border-radius:4px;letter-spacing:.06em;flex:none}
+.step-t{font-size:clamp(1.3rem,3.2vw,1.75rem);font-weight:700;flex:1}
+.step-m{font-family:var(--mono);font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);flex:none}
+.step h3{font-family:var(--mono);font-size:.78rem;text-transform:uppercase;letter-spacing:.13em;color:var(--muted);margin:2.1rem 0 .8rem;padding-bottom:.55rem;border-bottom:1px solid var(--line)}
+
+/* tables */
+table{width:100%;border-collapse:collapse;margin:0 0 1.5rem;font-size:.9rem}
+th,td{border:1px solid var(--line);padding:.55rem .7rem;text-align:left;vertical-align:top;font-family:var(--mono);font-size:.82rem}
+th{background:var(--ink);color:#fff;text-transform:uppercase;letter-spacing:.07em;font-size:.72rem}
+tbody tr:nth-child(even){background:var(--soft)}
+
+/* callouts */
+.note,.warn,.ok{border:1px solid var(--line);border-left:4px solid var(--accent);background:var(--soft);padding:1rem 1.15rem;border-radius:8px;margin:0 0 1.5rem}
+.warn{border-left-color:var(--warn);background:var(--warn-bg)}
+.ok{border-left-color:var(--ok);background:var(--ok-bg)}
+.note>strong,.warn>strong,.ok>strong{display:block;font-family:var(--mono);font-size:.74rem;text-transform:uppercase;letter-spacing:.1em;margin-bottom:.35rem}
+.note>strong{color:var(--accent)}.warn>strong{color:var(--warn)}.ok>strong{color:var(--ok)}
+.note p:last-child,.warn p:last-child,.ok p:last-child{margin:0}
+
+/* lists */
+ul.tick,ul.plain{list-style:none;margin:0 0 1.5rem;padding:0}
+ul.tick li{position:relative;padding:.45rem 0 .45rem 1.9rem;font-size:.95rem}
+ul.tick li::before{content:"\2713";position:absolute;left:.35rem;color:var(--ok);font-weight:700}
+ul.plain li{position:relative;padding:.25rem 0 .25rem 1.3rem;color:var(--muted);font-size:.95rem}
+ul.plain li::before{content:"\2014";position:absolute;left:0;color:var(--accent)}
+
+/* screenshots */
+figure{margin:0 0 1.7rem}
+.shot{position:relative;background:#fff;border:1px solid var(--line);border-radius:10px;overflow:hidden;box-shadow:0 2px 14px -8px rgba(20,22,28,.28)}
+.shot img{width:100%;height:auto;display:block}
+.pin{position:absolute;width:28px;height:28px;display:grid;place-items:center;background:var(--accent);color:#fff;border:2px solid #fff;border-radius:50%;font-family:var(--mono);font-size:.8rem;font-weight:700;box-shadow:0 2px 6px rgba(0,0,0,.35);z-index:2}
+figcaption{font-family:var(--mono);font-size:.74rem;color:var(--muted);margin-top:.6rem;letter-spacing:.03em}
+.legend{list-style:none;margin:.9rem 0 0;padding:0}
+.legend li{display:flex;gap:.6rem;align-items:flex-start;font-size:.92rem;padding:.3rem 0}
+.legend .n{flex:none;width:21px;height:21px;margin-top:.1rem;display:grid;place-items:center;background:var(--accent);color:#fff;border-radius:50%;font-family:var(--mono);font-size:.7rem;font-weight:700}
+.pending{border:1px dashed var(--muted);background:var(--soft);padding:2.4rem 1rem;text-align:center;font-family:var(--mono);font-size:.78rem;color:var(--muted);border-radius:10px;margin-bottom:1.7rem}
+
+/* trouble */
+.trouble{border-top:1px solid var(--line-2);padding-block:1.5rem}
+.trouble:first-of-type{border-top:0}
+.trouble h3{text-transform:none;letter-spacing:-.01em;font-size:1.05rem;color:var(--ink);border:0;padding:0;margin:0 0 .45rem;font-family:var(--sans)}
+.trouble h3::before{content:"\26A0";color:var(--warn);margin-right:.45rem}
+
+/* toc */
+.toc{border:1px solid var(--line);background:var(--soft);border-radius:10px;padding:1.3rem;margin-bottom:2rem}
+.toc h2{font-family:var(--mono);font-size:.74rem;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);margin-bottom:.85rem}
+.toc ol{margin:0;padding-left:1.25rem}
+.toc li{margin-bottom:.3rem;font-family:var(--mono);font-size:.85rem}
+.toc a{text-decoration:none}
+.toc a:hover{text-decoration:underline}
+
+/* footer */
+footer{border-top:1px solid var(--line);margin-top:3rem;background:var(--soft)}
+footer .wrap{padding-block:1.5rem 2.2rem;display:flex;justify-content:space-between;gap:.8rem;flex-wrap:wrap;font-family:var(--mono);font-size:.75rem;color:var(--muted)}
+footer p{margin:0}
+
+@media(max-width:620px){
+  body{font-size:16px}
+  .step-head{flex-wrap:wrap}
+  th,td{font-size:.76rem;padding:.45rem}
+  footer .wrap{flex-direction:column}
+}
+@media(prefers-reduced-motion:reduce){
+  *{transition-duration:.01ms!important}
+  html{scroll-behavior:auto}
+}
+</style>
+</head>
+<body>
+
+<a class="skip" href="#main">Skip to content</a>
+
+<header>
+  <div class="wrap nav">
+    <a class="brand" href="#top"><span class="mark"></span><span>hostingguide</span></a>
+    <nav class="links">
+      <a href="#start">Start</a>
+      <a href="#files">Files</a>
+      <a href="#repo">Repo</a>
+      <a href="#pages">Pages</a>
+      <a href="#dns">DNS</a>
+      <a href="#web3">Web3</a>
+      <a href="#verify">Verify</a>
+      <a href="#trouble">Trouble?</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+
+<section class="hero wrap" id="top">
+  <p class="eyebrow">Tested end to end &middot; Free forever</p>
+  <h1>Put your site online<br>on a domain <span class="mark-w">you own</span>.</h1>
+  <p class="lede">
+    No server, no hosting bill, no build step. You write a folder of files, GitHub serves
+    it free, and your own domain points at it. This guide is the complete process &mdash;
+    every click screenshotted, every mistake that cost us hours written down so you
+    don&rsquo;t repeat them.
+  </p>
+  <div class="hero-actions">
+    <a class="btn" href="#start">Start the guide</a>
+    <a class="btn btn-ghost" href="#trouble">Something broken?</a>
+  </div>
+  <p class="hero-note">$0 &middot; ~25 minutes &middot; no code knowledge &middot; nothing to install</p>
+</section>
+
+<div class="wrap">
+
+<!-- ============ 00 ============ -->
+<section class="step" id="start">
+  <div class="step-head">
+    <span class="step-n">00</span>
+    <h2 class="step-t">What you&rsquo;re building</h2>
+    <span class="step-m">Read first</span>
+  </div>
+
+  <p>The finished setup has four moving parts. Each one is handled in a step below.</p>
+
+  <table>
+    <thead><tr><th>part</th><th>what it does</th><th>step</th></tr></thead>
+    <tbody>
+      <tr><td>Your files</td><td>HTML, CSS, favicon sitting in a folder</td><td><a href="#files">01</a></td></tr>
+      <tr><td>GitHub repo</td><td>Holds the files and their history</td><td><a href="#repo">02</a></td></tr>
+      <tr><td>GitHub Pages</td><td>Serves those files at a free <code>.github.io</code> address</td><td><a href="#pages">03</a></td></tr>
+      <tr><td>Your domain</td><td>Points at GitHub so the name is yours</td><td><a href="#dns">04&ndash;05</a></td></tr>
+    </tbody>
+  </table>
+
+  <h3>What you need</h3>
+  <ul class="plain">
+    <li>A GitHub account (free)</li>
+    <li>A domain whose DNS you can edit &mdash; this guide uses a web3 domain, and section 05 covers what makes those different</li>
+    <li>About twenty-five minutes</li>
+  </ul>
+
+  <div class="ok">
+    <strong>Why bother with plain files?</strong>
+    <p>
+      Because there&rsquo;s nothing to break. No framework to update, no dependency that
+      disappears, no runtime to patch. Your site is a folder that still opens in ten
+      years &mdash; and if you ever want to leave, you drag the folder somewhere else.
+    </p>
+  </div>
+
+  <div class="toc">
+    <h2>Contents</h2>
+    <ol>
+      <li><a href="#files">Write the files</a></li>
+      <li><a href="#repo">Create the repo and upload</a></li>
+      <li><a href="#pages">Switch on GitHub Pages</a></li>
+      <li><a href="#dns">Point the domain at GitHub</a></li>
+      <li><a href="#web3">Sign the record &mdash; web3 only</a></li>
+      <li><a href="#verify">Verify it works</a></li>
+    </ol>
+  </div>
+</section>
+
+<!-- ============ 01 ============ -->
+<section class="step" id="files">
+  <div class="step-head">
+    <span class="step-n">01</span>
+    <h2 class="step-t">Write the files</h2>
+    <span class="step-m">5 min</span>
+  </div>
+
+  <p>Make a folder called <code>mysite</code> and put these inside. This very page is built exactly this way.</p>
+
+  <pre><code>mysite/
+├── index.html      the page itself (required)
+├── favicon.svg     the little tab icon
+├── .nojekyll       empty file - see below
+└── CNAME           added in step 04, your domain only</code></pre>
+
+  <h3>index.html</h3>
+  <p>GitHub Pages serves <code>index.html</code> at the root automatically. This one keeps everything inline &mdash; no separate stylesheet, no JavaScript, nothing to break.</p>
+
+  <pre><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+  &lt;meta charset="utf-8"&gt;
+  &lt;meta name="viewport" content="width=device-width, initial-scale=1"&gt;
+  &lt;title&gt;My site&lt;/title&gt;
+  &lt;style&gt;
+    body { font-family: system-ui; margin: 0; }
+    .wrap { max-width: 900px; margin: auto; padding: 24px; }
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;div class="wrap"&gt;
+    &lt;h1&gt;It works.&lt;/h1&gt;
+    &lt;p&gt;Served from GitHub Pages.&lt;/p&gt;
+  &lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+
+  <h3>The .nojekyll file</h3>
+  <p>
+    Create a completely <strong>empty</strong> file called <code>.nojekyll</code>, with no
+    extension and nothing inside it. GitHub runs Pages through a system called Jekyll,
+    and Jekyll silently skips any folder whose name starts with an underscore. This file
+    turns Jekyll off so every file and folder you commit gets published exactly as-is.
+  </p>
+
+  <div class="warn">
+    <strong>Do this before your first push</strong>
+    <p>
+      If you leave it out you&rsquo;ll lose an afternoon. A file you can plainly see in
+      your repo simply won&rsquo;t appear on the site, with no error message anywhere. If
+      that ever happens, this file is the first thing to check.
+    </p>
+  </div>
+</section>
+
+<!-- ============ 02 ============ -->
+<section class="step" id="repo">
+  <div class="step-head">
+    <span class="step-n">02</span>
+    <h2 class="step-t">Create the repo and upload</h2>
+    <span class="step-m">5 min</span>
+  </div>
+
+  <h3>Create it</h3>
+  <ol class="plain">
+    <li>Open <a href="https://github.com/new" target="_blank" rel="noopener">github.com/new</a></li>
+    <li>Type the folder name into the repository name box</li>
+    <li>Choose <strong>Public</strong> &mdash; Pages on a private repo is a paid feature</li>
+    <li>Click <strong>Create repository</strong></li>
+  </ol>
+
+  <figure>
+    <div class="shot">
+      <img src="shots/01-create-repo.png" alt="GitHub's Create a new repository page, with hostingguide entered as the repository name and a green confirmation that the name is available." width="1000" height="844">
+      <span class="pin" style="left:36%;top:35%">1</span>
+      <span class="pin" style="left:77%;top:70%">2</span>
+      <span class="pin" style="left:63%;top:96%">3</span>
+    </div>
+    <figcaption>Creating the repository</figcaption>
+  </figure>
+  <ol class="legend">
+    <li><span class="n">1</span><span><strong>Repository name</strong> becomes your address: <code>username.github.io/&lt;this-name&gt;</code>. Keep it short.</span></li>
+    <li><span class="n">2</span><span><strong>Description</strong> &mdash; optional, but it&rsquo;s what visitors see first.</span></li>
+    <li><span class="n">3</span><span><strong>Public</strong>. Required for free Pages. Then <strong>Create repository</strong>.</span></li>
+  </ol>
+
+  <h3>Upload</h3>
+  <p>
+    Drag your files onto the empty repo, or click <strong>choose your files</strong>. Then
+    scroll down and <strong>Commit changes</strong>.
+  </p>
+
+  <div class="warn">
+    <strong>The name has to be exactly right</strong>
+    <p>
+      <code>myfile.html</code> gets you a 404. GitHub only serves the root automatically for
+      the exact lowercase name <code>index.html</code>.
+    </p>
+  </div>
+
+  <h3>Or use the command line</h3>
+  <p>Faster once you&rsquo;re past the first commit, and you get proper history:</p>
+  <pre><code>git init -b main
+git add .
+git commit -m "Add site"
+git remote add origin https://github.com/username/repo.git
+git push -u origin main</code></pre>
+
+  <div class="warn">
+    <strong>Never leave a token in a remote URL</strong>
+    <p>
+      A URL like <code>https://user:token@github.com/&hellip;</code> is written in plain text to
+      <code>.git/config</code> and into your shell history. If you must, push and then
+      immediately reset it: <code>git remote set-url origin https://github.com/username/repo.git</code>.
+    </p>
+  </div>
+</section>
+
+<!-- ============ 03 ============ -->
+<section class="step" id="pages">
+  <div class="step-head">
+    <span class="step-n">03</span>
+    <h2 class="step-t">Switch on GitHub Pages</h2>
+    <span class="step-m">3 min</span>
+  </div>
+
+  <p>In your repo open <strong>Settings &rarr; Pages</strong>.</p>
+
+  <figure>
+    <div class="shot">
+      <img src="shots/02-settings-pages.png" alt="GitHub Settings Pages screen showing the Build and deployment section with Source set to Deploy from a branch, branch main, folder root, and a green box confirming the site is live." width="1300" height="850">
+      <span class="pin" style="left:41%;top:29%">1</span>
+      <span class="pin" style="left:50%;top:48%">2</span>
+      <span class="pin" style="left:27%;top:79%">3</span>
+    </div>
+    <figcaption>Settings &rarr; Pages</figcaption>
+  </figure>
+  <ol class="legend">
+    <li><span class="n">1</span><span>The green box &mdash; your proof it worked. Copy that URL; test it <strong>before</strong> touching DNS.</span></li>
+    <li><span class="n">2</span><span><strong>Source</strong>: <code>Deploy from a branch</code>, branch <code>main</code>, folder <code>/ (root)</code>. These three are all that matter.</span></li>
+    <li><span class="n">3</span><span><strong>Custom domain</strong>, further down. Step 04.</span></li>
+  </ol>
+
+  <div class="ok">
+    <strong>Test the github.io URL right now</strong>
+    <p>
+      Open <code>username.github.io/&lt;repo&gt;/</code> and confirm your site renders. If it
+      does, GitHub is working perfectly and anything that fails later is DNS &mdash; not
+      Pages. Knowing which half is broken saves a lot of time.
+    </p>
+  </div>
+</section>
+
+<!-- ============ 04 ============ -->
+<section class="step" id="dns">
+  <div class="step-head">
+    <span class="step-n">04</span>
+    <h2 class="step-t">Point the domain at GitHub</h2>
+    <span class="step-m">10 min</span>
+  </div>
+
+  <p>Two pieces of setup, and the order matters.</p>
+
+  <h3>4a &mdash; the CNAME file</h3>
+  <p>Create a file named exactly <code>CNAME</code> containing one line and nothing else:</p>
+  <pre><code>hostingguide.virtualsociety</code></pre>
+
+  <div class="warn">
+    <strong>This one file controls your Pages URL</strong>
+    <p>
+      The moment <code>CNAME</code> exists, GitHub redirects
+      <code>username.github.io/&lt;repo&gt;/</code> to your domain with a real
+      <strong>HTTP 301</strong>, on the server &mdash; not with JavaScript. If your domain
+      isn&rsquo;t working yet, every visitor to your Pages URL gets sent to a broken page
+      and the Pages URL becomes unusable.
+    </p>
+    <p>
+      That&rsquo;s fine &mdash; just don&rsquo;t be surprised. If you need to undo it, rename
+      the file to <code>CNAME.disabled</code>, commit, and GitHub goes straight back to
+      serving the Pages URL. Rename it back when the domain is live.
+    </p>
+  </div>
+
+  <h3>4b &mdash; the DNS records</h3>
+  <p>Add these at your domain provider:</p>
+
+  <table>
+    <thead><tr><th>type</th><th>name</th><th>value</th><th>TTL</th></tr></thead>
+    <tbody>
+      <tr><td>A</td><td>@</td><td>185.199.108.153</td><td>300</td></tr>
+      <tr><td>A</td><td>@</td><td>185.199.109.153</td><td>300</td></tr>
+      <tr><td>A</td><td>@</td><td>185.199.110.153</td><td>300</td></tr>
+      <tr><td>A</td><td>@</td><td>185.199.111.153</td><td>300</td></tr>
+      <tr><td>CNAME</td><td>www</td><td>username.github.io</td><td>300</td></tr>
+    </tbody>
+  </table>
+
+  <p>
+    GitHub uses four anycast addresses. Add all four &mdash; they cost nothing, and they
+    keep the site reachable if any single address is ever withdrawn. Note each one is its
+    own row; you can&rsquo;t put four addresses in one record.
+  </p>
+
+  <div class="warn">
+    <strong>The value people get wrong</strong>
+    <p>
+      The <code>www</code> CNAME must be <strong>your</strong> username&rsquo;s Pages host
+      &mdash; <code>username.github.io</code>, never
+      <code>username.github.io/myrepo</code>. The A records are the opposite: they&rsquo;re
+      GitHub&rsquo;s, the same for every Pages site on the internet, and unrelated to your
+      account.
+    </p>
+  </div>
+
+  <div class="pending">Screenshot: the DNS record editor, with all four A rows and the www CNAME.</div>
+</section>
+
+<!-- ============ 05 ============ -->
+<section class="step" id="web3">
+  <div class="step-head">
+    <span class="step-n">05</span>
+    <h2 class="step-t">Sign the record &mdash; web3 only</h2>
+    <span class="step-m">Critical</span>
+  </div>
+
+  <div class="note">
+    <strong>Skip this section if your domain is a normal one</strong>
+    <p>
+      Everything below applies only to web3 domains on an alt-root &mdash; names ending in
+      <code>.virtualsociety</code>, <code>.hodl</code>, <code>.nfts</code>,
+      <code>.metaverse</code> and similar. If your domain is a conventional
+      <code>.com</code>, section 04 is the end of the line and you&rsquo;re done.
+    </p>
+  </div>
+
+  <p>
+    On a web3 domain your records live on a blockchain, and the nameserver reads them from
+    there. That changes two things, and both surprise people badly.
+  </p>
+
+  <h3>It looks right but isn&rsquo;t</h3>
+  <p>
+    The dashboard will happily save a record, display it back to you in a tidy table, and
+    every field will look perfect &mdash; while your domain points somewhere else entirely.
+    Saving is not publishing. Until the record reaches the chain, the nameserver has
+    nothing to serve.
+  </p>
+
+  <h3>One slot per address</h3>
+  <p>Each IP needs its own on-chain slot. Four addresses means four records, not one record with four values:</p>
+
+  <table>
+    <thead><tr><th>slot</th><th>value</th></tr></thead>
+    <tbody>
+      <tr><td>RECORD.A.0</td><td>185.199.108.153</td></tr>
+      <tr><td>RECORD.A.1</td><td>185.199.109.153</td></tr>
+      <tr><td>RECORD.A.2</td><td>185.199.110.153</td></tr>
+      <tr><td>RECORD.A.3</td><td>185.199.111.153</td></tr>
+      <tr><td>REDIRECT.WEBSITE.0</td><td>https://username.github.io/&lt;repo&gt;/</td></tr>
+    </tbody>
+  </table>
+
+  <div class="warn">
+    <strong>Capital letters matter</strong>
+    <p>
+      The redirect key is <code>REDIRECT.WEBSITE.0</code>, written in capitals.
+      <code>redirect.website.0</code> in lowercase is a <strong>different record</strong> &mdash;
+      it will sit in your table looking perfectly reasonable while doing nothing at all. This
+      one cost us hours. If a record isn&rsquo;t behaving, check its capitalisation first.
+    </p>
+  </div>
+
+  <h3>Then sign it</h3>
+  <p>
+    Near the top of the same Records tab there&rsquo;s a <strong>Wallet Address</strong> box
+    with a <strong>Sign Transaction</strong> button. That button is what commits your saved
+    records to the chain. Until you press it, you have configuration, not a live domain.
+  </p>
+
+  <div class="pending">Screenshot: the Web3 Records table, plus the Wallet Address and Sign Transaction controls above it.</div>
+
+  <div class="ok">
+    <strong>The order that works</strong>
+    <p>
+      Save the records &rarr; sign the transaction &rarr; wait for the nameserver to pick it up.
+      Nothing in step 04 will appear to work until step 05 is done, and no amount of
+      waiting will fix it. This ordering is the single most common reason a web3 domain
+      that looks correctly configured never loads.
+    </p>
+  </div>
+</section>
+
+<!-- ============ 06 ============ -->
+<section class="step" id="verify">
+  <div class="step-head">
+    <span class="step-n">06</span>
+    <h2 class="step-t">Verify it works</h2>
+    <span class="step-m">2 min</span>
+  </div>
+
+  <h3>Check it resolves</h3>
+  <pre><code>nslookup yourdomain.com ns1.noto.network</code></pre>
+
+  <p>You want to see <code>185.199.108.153</code>.</p>
+
+  <div class="warn">
+    <strong>Do not test a web3 domain with a plain lookup</strong>
+    <p>
+      Ask any public resolver &mdash; Google, Cloudflare &mdash; about a web3 domain and it
+      will always answer <strong>NXDOMAIN</strong>. That is <em>correct</em>, not a fault:
+      the name lives on an alt-root, outside the ordinary DNS tree entirely. A public
+      lookup tells you nothing about whether your setup is right, and can make a perfectly
+      working domain look broken. Always query the alt-root&rsquo;s own nameserver.
+    </p>
+  </div>
+
+  <h3>Then read the result</h3>
+  <table>
+    <thead><tr><th>what you see</th><th>what it means</th></tr></thead>
+    <tbody>
+      <tr><td>Your site</td><td>Done.</td></tr>
+      <tr><td>404 from GitHub</td><td>DNS is fine; the repo isn&rsquo;t serving. Check the filename is exactly <code>index.html</code>.</td></tr>
+      <tr><td>Old host or a 502</td><td>Your domain still points at whatever it pointed at before. The change hasn&rsquo;t propagated &mdash; or was never signed.</td></tr>
+      <tr><td>Nothing at all</td><td>Nameservers are wrong, or the record was never committed to the chain.</td></tr>
+    </tbody>
+  </table>
+
+  <div class="ok">
+    <strong>About waiting</strong>
+    <p>
+      Changes can take minutes or hours depending on your provider and the previous
+      record&rsquo;s TTL. If the lookup shows the right IP but the page still errors, give
+      it time and reload. If it shows the <em>wrong</em> IP, waiting will never help
+      &mdash; the records aren&rsquo;t signed or aren&rsquo;t set.
+    </p>
+  </div>
+</section>
+
+<!-- ============ TROUBLE ============ -->
+<section class="step" id="trouble">
+  <div class="step-head">
+    <span class="step-n">!!</span>
+    <h2 class="step-t">When it goes wrong</h2>
+    <span class="step-m">Keep this</span>
+  </div>
+
+  <div class="trouble">
+    <h3>My Pages URL redirects to a dead domain</h3>
+    <p>
+      That&rsquo;s the <code>CNAME</code> file doing exactly its job &mdash; GitHub 301s the
+      Pages URL to your custom domain. If the domain isn&rsquo;t live yet, rename
+      <code>CNAME</code> to <code>CNAME.disabled</code> and commit. Rename it back once the
+      domain works.
+    </p>
+  </div>
+
+  <div class="trouble">
+    <h3>Records look perfect but the domain points elsewhere</h3>
+    <p>
+      On a web3 domain this is almost always the chain, not a typo. The dashboard and the
+      nameserver read from different places and only one is authoritative. Confirm each
+      address sits in its own <code>RECORD.A.*</code> slot, then press
+      <strong>Sign Transaction</strong>.
+    </p>
+  </div>
+
+  <div class="trouble">
+    <h3>I spelled the redirect key in lowercase</h3>
+    <p>
+      It saved, and it looks fine, and it does nothing. <code>REDIRECT.WEBSITE.0</code> is
+      capitalised; the lowercase spelling is a different record. Delete it and create it
+      again in capitals.
+    </p>
+  </div>
+
+  <div class="trouble">
+    <h3>Editing a record broke it</h3>
+    <p>
+      Changing an existing record in place sometimes leaves it without a valid chain slot,
+      so it stops being served. If an edit doesn&rsquo;t take effect, delete the record and
+      create it fresh rather than editing it a second time.
+    </p>
+  </div>
+
+  <div class="trouble">
+    <h3>A file I committed isn&rsquo;t showing up</h3>
+    <p>
+      You didn&rsquo;t create <code>.nojekyll</code>. Add the empty file and commit &mdash;
+      no restart needed.
+    </p>
+  </div>
+
+  <div class="trouble">
+    <h3>GitHub says &ldquo;the certificate does not exist yet&rdquo;</h3>
+    <p>
+      That&rsquo;s <strong>Enforce HTTPS</strong> being refused, and for a web3 domain it is
+      permanent. Those domains are HTTP-only &mdash; no certificate can be issued. Leave the
+      box unticked and carry on; nothing is broken, and your site will simply be reached
+      over <code>http://</code>.
+    </p>
+  </div>
+
+  <div class="trouble">
+    <h3>A public resolver says my domain doesn&rsquo;t exist</h3>
+    <p>
+      Expected, and harmless. Web3 domains aren&rsquo;t in the ordinary DNS tree, so public
+      resolvers always return NXDOMAIN. Query <code>ns1.noto.network</code> instead.
+    </p>
+  </div>
+
+  <div class="trouble">
+    <h3>www and the bare domain behave differently</h3>
+    <p>
+      Normal for a few minutes &mdash; the A records and the CNAME propagate separately.
+      Once both settle they serve the same site, because GitHub treats both hostnames as
+      yours via the <code>CNAME</code> file.
+    </p>
+  </div>
+</section>
+
+</div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>hostingguide.virtualsociety</p>
+    <p>Static HTML &middot; GitHub Pages &middot; no trackers &middot; no build step</p>
+  </div>
+</footer>
+
+</body>
+</html>
