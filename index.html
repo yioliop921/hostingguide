@@ -430,7 +430,35 @@ git push -u origin main</code></pre>
     </p>
   </div>
 
-  <div class="pending">Screenshot: the DNS record editor, with all four A rows and the www CNAME.</div>
+  <figure>
+    <div class="shot">
+      <img src="shots/07-freename-records-full.png" alt="The full Freename Records page for hostingguide.virtualsociety, showing the domain header, Wallet Address, Forward Domain toggle, the DNS Records table with A, NS and CNAME rows, and the Web3 Records table." width="1416" height="2036">
+      <span class="pin" style="left:34%;top:22%">1</span>
+      <span class="pin" style="left:34%;top:29%">2</span>
+      <span class="pin" style="left:34%;top:37%">3</span>
+      <span class="pin" style="left:34%;top:48%">4</span>
+      <span class="pin" style="left:34%;top:53%">5</span>
+      <span class="pin" style="left:34%;top:58%">6</span>
+    </div>
+    <figcaption>The whole Records page &mdash; everything in steps 04 and 05 happens here</figcaption>
+  </figure>
+  <ol class="legend">
+    <li><span class="n">1</span><span>The <strong>Records</strong> tab, next to Overview and Email. This is the only page you need.</span></li>
+    <li><span class="n">2</span><span>Status line. <strong>&ldquo;not resolving&rdquo;</strong> here is normal before you sign &mdash; it flips once the chain catches up.</span></li>
+    <li><span class="n">3</span><span><strong>Wallet Address</strong> &mdash; where your wallet is registered for this domain. This is the account that signs your records.</span></li>
+    <li><span class="n">4</span><span><strong>Sign Transaction</strong>. <strong>This button is the whole game on a web3 domain.</strong> Everything below it is configuration until you press it.</span></li>
+    <li><span class="n">5</span><span><strong>DNS Records</strong> &mdash; your A, NS and CNAME rows. The convenience view.</span></li>
+    <li><span class="n">6</span><span><strong>Web3 Records</strong> &mdash; the <code>RECORD.A.*</code> slots. This is what the nameserver actually reads.</span></li>
+  </ol>
+
+  <div class="warn">
+    <strong>Forward Domain is not what you want</strong>
+    <p>
+      That toggle under Wallet Address says &ldquo;Will disable your root A record pointing to
+      185.199.108.153&rdquo;. It redirects your domain to somewhere else entirely. Leave it
+      off &mdash; you want the A record live, not redirected.
+    </p>
+  </div>
 </section>
 
 <!-- ============ 05 ============ -->
@@ -495,7 +523,17 @@ git push -u origin main</code></pre>
     records to the chain. Until you press it, you have configuration, not a live domain.
   </p>
 
-  <div class="pending">Screenshot: the Web3 Records table, plus the Wallet Address and Sign Transaction controls above it.</div>
+  <div class="ok">
+    <strong>What &ldquo;correct&rdquo; looks like</strong>
+    <p>
+      In <strong>DNS Records</strong> you should see an <code>A</code> row on
+      <code>185.199.108.153</code> plus the two <code>NS</code> rows and your
+      <code>www</code> CNAME. In <strong>Web3 Records</strong> you should see exactly five
+      rows: <code>RECORD.A.0</code> through <code>RECORD.A.3</code> holding the four GitHub
+      IPs, and <code>REDIRECT.WEBSITE.0</code> holding your Pages URL. Then press
+      <strong>Sign Transaction</strong>.
+    </p>
+  </div>
 
   <div class="ok">
     <strong>The order that works</strong>
