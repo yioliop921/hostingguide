@@ -432,31 +432,32 @@ git push -u origin main</code></pre>
 
   <figure>
     <div class="shot">
-      <img src="shots/07-freename-records-full.png" alt="The full Freename Records page for hostingguide.virtualsociety, showing the domain header, Wallet Address, Forward Domain toggle, the DNS Records table with A, NS and CNAME rows, and the Web3 Records table." width="1416" height="2036">
-      <span class="pin" style="left:34%;top:22%">1</span>
-      <span class="pin" style="left:34%;top:29%">2</span>
-      <span class="pin" style="left:34%;top:37%">3</span>
-      <span class="pin" style="left:34%;top:48%">4</span>
-      <span class="pin" style="left:34%;top:53%">5</span>
-      <span class="pin" style="left:34%;top:58%">6</span>
+      <img src="shots/07a-freename-top.png" alt="Freename Records page showing the domain status line, Wallet Address panel, Forward Domain toggle, and the DNS Records table with A, NS and CNAME rows." width="830" height="750">
+      <span class="pin" style="left:69%;top:5%">1</span>
+      <span class="pin" style="left:8%;top:16%">2</span>
+      <span class="pin" style="left:8%;top:38%">3</span>
+      <span class="pin" style="left:8%;top:53%">4</span>
+      <span class="pin" style="left:12%;top:73%">5</span>
+      <span class="pin" style="left:12%;top:96%">6</span>
     </div>
-    <figcaption>The whole Records page &mdash; everything in steps 04 and 05 happens here</figcaption>
+    <figcaption>Freename &rarr; your domain &rarr; <strong>Records</strong> tab</figcaption>
   </figure>
   <ol class="legend">
-    <li><span class="n">1</span><span>The <strong>Records</strong> tab, next to Overview and Email. This is the only page you need.</span></li>
-    <li><span class="n">2</span><span>Status line. <strong>&ldquo;not resolving&rdquo;</strong> here is normal before you sign &mdash; it flips once the chain catches up.</span></li>
-    <li><span class="n">3</span><span><strong>Wallet Address</strong> &mdash; where your wallet is registered for this domain. This is the account that signs your records.</span></li>
-    <li><span class="n">4</span><span><strong>Sign Transaction</strong>. <strong>This button is the whole game on a web3 domain.</strong> Everything below it is configuration until you press it.</span></li>
-    <li><span class="n">5</span><span><strong>DNS Records</strong> &mdash; your A, NS and CNAME rows. The convenience view.</span></li>
-    <li><span class="n">6</span><span><strong>Web3 Records</strong> &mdash; the <code>RECORD.A.*</code> slots. This is what the nameserver actually reads.</span></li>
+    <li><span class="n">1</span><span>Status line. <strong>&ldquo;not resolving&rdquo;</strong> here is normal before you sign &mdash; it flips once the chain catches up.</span></li>
+    <li><span class="n">2</span><span><strong>Wallet Address</strong> &mdash; the wallet registered to this domain. This is the account that signs your records.</span></li>
+    <li><span class="n">3</span><span><strong>Sign Transaction</strong> appears here once a wallet is connected. <strong>This button is the whole game on a web3 domain</strong> &mdash; everything below it is just configuration until you press it.</span></li>
+    <li><span class="n">4</span><span><strong>Forward Domain</strong> &mdash; the trap. Its own caption admits it &ldquo;will disable your root A record&rdquo;. Leave it <strong>off</strong>.</span></li>
+    <li><span class="n">5</span><span>The <strong>A</strong> row on <code>185.199.108.153</code>. This is the record that points your domain at GitHub.</span></li>
+    <li><span class="n">6</span><span>The <strong>CNAME</strong> handling <code>www</code>. The two NS rows come with the domain.</span></li>
   </ol>
 
   <div class="warn">
     <strong>Forward Domain is not what you want</strong>
     <p>
-      That toggle under Wallet Address says &ldquo;Will disable your root A record pointing to
-      185.199.108.153&rdquo;. It redirects your domain to somewhere else entirely. Leave it
-      off &mdash; you want the A record live, not redirected.
+      That toggle says &ldquo;Will disable your root A record pointing to 185.199.108.153&rdquo;.
+      Switch it on and your domain stops pointing at GitHub altogether &mdash; it forwards
+      somewhere else instead, and your site never loads. It&rsquo;s for domains you want to
+      redirect elsewhere: one for sale, an old brand pointing at a new one. Not for hosting.
     </p>
   </div>
 </section>
@@ -522,6 +523,25 @@ git push -u origin main</code></pre>
     with a <strong>Sign Transaction</strong> button. That button is what commits your saved
     records to the chain. Until you press it, you have configuration, not a live domain.
   </p>
+
+  <figure>
+    <div class="shot">
+      <img src="shots/07b-freename-web3.png" alt="The Freename Web3 Records table showing RECORD.A.0 through RECORD.A.3 with the four GitHub IPs, and REDIRECT.WEBSITE.0 with the Pages URL." width="830" height="660">
+      <span class="pin" style="left:13%;top:41%">1</span>
+      <span class="pin" style="left:13%;top:52%">2</span>
+      <span class="pin" style="left:13%;top:63%">3</span>
+      <span class="pin" style="left:13%;top:74%">4</span>
+      <span class="pin" style="left:13%;top:85%">5</span>
+    </div>
+    <figcaption>The five rows you want to see in Web3 Records</figcaption>
+  </figure>
+  <ol class="legend">
+    <li><span class="n">1</span><span><code>RECORD.A.0</code> &rarr; <code>185.199.108.153</code>. One slot, one address.</span></li>
+    <li><span class="n">2</span><span><code>RECORD.A.1</code> &rarr; <code>185.199.109.153</code></span></li>
+    <li><span class="n">3</span><span><code>RECORD.A.2</code> &rarr; <code>185.199.110.153</code></span></li>
+    <li><span class="n">4</span><span><code>RECORD.A.3</code> &rarr; <code>185.199.111.153</code></span></li>
+    <li><span class="n">5</span><span><code>REDIRECT.WEBSITE.0</code> &rarr; your Pages URL. <strong>Capital letters.</strong></span></li>
+  </ol>
 
   <div class="ok">
     <strong>What &ldquo;correct&rdquo; looks like</strong>
