@@ -5,15 +5,16 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>hostingguide.virtualsociety — host your own site, step by step</title>
 <meta name="description" content="The complete, tested process for putting a plain HTML site on GitHub Pages and pointing a web3 domain at it. Every click screenshotted, every trap documented.">
-<meta name="theme-color" content="#ffffff">
+<meta name="theme-color" content="#06070c">
 <style>
 :root{
-  --ink:#14161c; --ink-2:#3d4250; --muted:#6b7180; --line:#dfe3ea; --line-2:#eef1f5;
-  --bg:#ffffff; --soft:#f7f9fc; --accent:#1f4fd8; --accent-soft:#e8eeff;
-  --warn:#b3380f; --warn-bg:#fdeee7; --ok:#0b6b4f; --ok-bg:#e2f4ec;
+  --ink:#f4f6fa; --ink-2:#c9d0dc; --muted:#9aa3b2; --line:rgba(255,255,255,.09); --line-2:rgba(255,255,255,.16);
+  --bg:#06070c; --soft:rgba(255,255,255,.035); --accent:#7c5cff; --accent-soft:rgba(124,92,255,.12);
+  --warn:#fbbf24; --warn-bg:rgba(251,191,36,.08); --ok:#34d399; --ok-bg:rgba(52,211,153,.08);
   --mono:ui-monospace,"SFMono-Regular",Menlo,Consolas,"Liberation Mono",monospace;
   --sans:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
   --max:980px; --pad:22px;
+  --r:16px;
 }
 *,*::before,*::after{box-sizing:border-box}
 html{scroll-behavior:smooth}
@@ -21,23 +22,32 @@ body{
   margin:0; background:var(--bg); color:var(--ink);
   font-family:var(--sans); font-size:17px; line-height:1.68;
   -webkit-font-smoothing:antialiased;
+  background-image:
+    radial-gradient(60rem 30rem at 12% -8%, rgba(124,92,255,.13), transparent 60%),
+    radial-gradient(50rem 26rem at 92% 4%, rgba(34,211,238,.09), transparent 60%);
+  background-attachment:fixed;
 }
+::selection{background:rgba(124,92,255,.35);color:#fff}
+::-webkit-scrollbar{width:11px;height:11px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:rgba(124,92,255,.35);border-radius:99px;border:2px solid var(--bg)}
+::-webkit-scrollbar-thumb:hover{background:rgba(124,92,255,.55)}
 .wrap{width:100%;max-width:var(--max);margin-inline:auto;padding-inline:var(--pad)}
 h1,h2,h3{line-height:1.14;letter-spacing:-.021em;margin:0}
 p{margin:0 0 1rem}
 a{color:var(--accent)}
 :focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:4px}
-.skip{position:absolute;left:-9999px;top:0;background:var(--ink);color:#fff;padding:.6rem 1rem;font-family:var(--mono)}
+.skip{position:absolute;left:-9999px;top:0;background:var(--accent);color:#fff;padding:.6rem 1rem;font-family:var(--mono)}
 .skip:focus{left:0}
-code{font-family:var(--mono);font-size:.88em;background:var(--accent-soft);border:1px solid var(--line);padding:.06rem .32rem;border-radius:3px}
-pre{background:var(--ink);color:#e9edf5;border-radius:10px;padding:1rem 1.15rem;overflow-x:auto;font-family:var(--mono);font-size:.85rem;line-height:1.66;margin:0 0 1.4rem}
+code{font-family:var(--mono);font-size:.88em;background:var(--accent-soft);border:1px solid var(--line);padding:.06rem .32rem;border-radius:3px;color:var(--brand-txt,var(--ink))}
+pre{background:#0a0c14;border:1px solid var(--line);color:#e9edf5;border-radius:var(--r);padding:1rem 1.15rem;overflow-x:auto;font-family:var(--mono);font-size:.85rem;line-height:1.66;margin:0 0 1.4rem}
 pre code{background:none;border:0;padding:0;color:inherit;font-size:inherit}
 
 /* header */
-header{border-bottom:1px solid var(--line);background:var(--bg);position:sticky;top:0;z-index:50}
+header{border-bottom:1px solid var(--line);background:rgba(6,7,12,.82);backdrop-filter:blur(12px);position:sticky;top:0;z-index:50}
 .nav{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding-block:14px;flex-wrap:wrap}
 .brand{display:flex;align-items:center;gap:.6rem;font-family:var(--mono);font-weight:700;font-size:.92rem;text-decoration:none;color:var(--ink)}
-.mark{width:11px;height:11px;background:var(--accent);border-radius:2px;display:inline-block}
+.mark{width:11px;height:11px;background:linear-gradient(135deg,var(--accent),#22d3ee);border-radius:3px;display:inline-block}
 .links{display:flex;gap:1.15rem;flex-wrap:wrap}
 .links a{font-family:var(--mono);font-size:.75rem;text-transform:uppercase;letter-spacing:.09em;text-decoration:none;color:var(--muted);padding-bottom:2px;border-bottom:2px solid transparent}
 .links a:hover{color:var(--accent);border-color:var(--accent)}
@@ -46,19 +56,19 @@ header{border-bottom:1px solid var(--line);background:var(--bg);position:sticky;
 .hero{padding-block:clamp(40px,7vw,76px) clamp(24px,4vw,40px)}
 .eyebrow{display:inline-block;font-family:var(--mono);font-size:.72rem;text-transform:uppercase;letter-spacing:.11em;color:var(--accent);background:var(--accent-soft);border:1px solid var(--line);padding:.3rem .6rem;border-radius:999px;margin:0 0 1.5rem}
 h1{font-size:clamp(2rem,5.6vw,3.2rem);font-weight:800;margin-bottom:1.1rem;letter-spacing:-.03em}
-h1 .mark-w{background:var(--accent);color:#fff;padding:0 .16em;border-radius:4px}
+h1 .mark-w{background:linear-gradient(135deg,var(--accent),#22d3ee);color:#fff;padding:0 .16em;border-radius:6px}
 .lede{font-size:clamp(1rem,2.1vw,1.14rem);color:var(--muted);max-width:60ch}
 .hero-actions{display:flex;gap:.7rem;flex-wrap:wrap;margin-top:1.9rem}
-.btn{display:inline-block;font-family:var(--mono);font-size:.8rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;text-decoration:none;padding:.78rem 1.35rem;border-radius:8px;border:1px solid var(--ink);background:var(--ink);color:#fff;transition:transform .14s,box-shadow .14s}
-.btn:hover{transform:translateY(-2px);box-shadow:0 6px 18px -8px rgba(20,22,28,.5)}
-.btn-ghost{background:#fff;color:var(--ink)}
+.btn{display:inline-block;font-family:var(--mono);font-size:.8rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;text-decoration:none;padding:.78rem 1.35rem;border-radius:10px;border:1px solid var(--accent);background:linear-gradient(135deg,var(--accent),#6d4df0);color:#fff;transition:transform .14s,box-shadow .14s}
+.btn:hover{transform:translateY(-2px);box-shadow:0 8px 22px -10px rgba(124,92,255,.7)}
+.btn-ghost{background:transparent;color:var(--ink);border-color:var(--line-2)}
 .hero-note{font-family:var(--mono);font-size:.78rem;color:var(--muted);margin:1.1rem 0 0}
 
 /* steps */
 .step{border-top:1px solid var(--line);padding-block:clamp(38px,6vw,68px)}
 .step:last-of-type{border-bottom:1px solid var(--line)}
 .step-head{display:flex;align-items:baseline;gap:.85rem;margin-bottom:1.5rem;flex-wrap:wrap}
-.step-n{font-family:var(--mono);font-weight:700;font-size:.8rem;background:var(--accent);color:#fff;padding:.26rem .55rem;border-radius:4px;letter-spacing:.06em;flex:none}
+.step-n{font-family:var(--mono);font-weight:700;font-size:.8rem;background:linear-gradient(135deg,var(--accent),#6d4df0);color:#fff;padding:.26rem .55rem;border-radius:6px;letter-spacing:.06em;flex:none}
 .step-t{font-size:clamp(1.3rem,3.2vw,1.75rem);font-weight:700;flex:1}
 .step-m{font-family:var(--mono);font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);flex:none}
 .step h3{font-family:var(--mono);font-size:.78rem;text-transform:uppercase;letter-spacing:.13em;color:var(--muted);margin:2.1rem 0 .8rem;padding-bottom:.55rem;border-bottom:1px solid var(--line)}
@@ -66,11 +76,11 @@ h1 .mark-w{background:var(--accent);color:#fff;padding:0 .16em;border-radius:4px
 /* tables */
 table{width:100%;border-collapse:collapse;margin:0 0 1.5rem;font-size:.9rem}
 th,td{border:1px solid var(--line);padding:.55rem .7rem;text-align:left;vertical-align:top;font-family:var(--mono);font-size:.82rem}
-th{background:var(--ink);color:#fff;text-transform:uppercase;letter-spacing:.07em;font-size:.72rem}
+th{background:rgba(255,255,255,.06);color:var(--ink);text-transform:uppercase;letter-spacing:.07em;font-size:.72rem}
 tbody tr:nth-child(even){background:var(--soft)}
 
 /* callouts */
-.note,.warn,.ok{border:1px solid var(--line);border-left:4px solid var(--accent);background:var(--soft);padding:1rem 1.15rem;border-radius:8px;margin:0 0 1.5rem}
+.note,.warn,.ok{border:1px solid var(--line);border-left:4px solid var(--accent);background:var(--soft);padding:1rem 1.15rem;border-radius:10px;margin:0 0 1.5rem}
 .warn{border-left-color:var(--warn);background:var(--warn-bg)}
 .ok{border-left-color:var(--ok);background:var(--ok-bg)}
 .note>strong,.warn>strong,.ok>strong{display:block;font-family:var(--mono);font-size:.74rem;text-transform:uppercase;letter-spacing:.1em;margin-bottom:.35rem}
@@ -86,13 +96,13 @@ ul.plain li::before{content:"\2014";position:absolute;left:0;color:var(--accent)
 
 /* screenshots */
 figure{margin:0 0 1.7rem}
-.shot{position:relative;background:#fff;border:1px solid var(--line);border-radius:10px;overflow:hidden;box-shadow:0 2px 14px -8px rgba(20,22,28,.28)}
+.shot{position:relative;background:#0a0c14;border:1px solid var(--line);border-radius:var(--r);overflow:hidden;box-shadow:0 4px 20px -10px rgba(0,0,0,.6)}
 .shot img{width:100%;height:auto;display:block}
-.pin{position:absolute;width:28px;height:28px;display:grid;place-items:center;background:var(--accent);color:#fff;border:2px solid #fff;border-radius:50%;font-family:var(--mono);font-size:.8rem;font-weight:700;box-shadow:0 2px 6px rgba(0,0,0,.35);z-index:2}
+.pin{position:absolute;width:28px;height:28px;display:grid;place-items:center;background:linear-gradient(135deg,var(--accent),#6d4df0);color:#fff;border:2px solid #0a0c14;border-radius:50%;font-family:var(--mono);font-size:.8rem;font-weight:700;box-shadow:0 2px 8px rgba(0,0,0,.5);z-index:2}
 figcaption{font-family:var(--mono);font-size:.74rem;color:var(--muted);margin-top:.6rem;letter-spacing:.03em}
 .legend{list-style:none;margin:.9rem 0 0;padding:0}
 .legend li{display:flex;gap:.6rem;align-items:flex-start;font-size:.92rem;padding:.3rem 0}
-.legend .n{flex:none;width:21px;height:21px;margin-top:.1rem;display:grid;place-items:center;background:var(--accent);color:#fff;border-radius:50%;font-family:var(--mono);font-size:.7rem;font-weight:700}
+.legend .n{flex:none;width:21px;height:21px;margin-top:.1rem;display:grid;place-items:center;background:linear-gradient(135deg,var(--accent),#6d4df0);color:#fff;border-radius:50%;font-family:var(--mono);font-size:.7rem;font-weight:700}
 .pending{border:1px dashed var(--muted);background:var(--soft);padding:2.4rem 1rem;text-align:center;font-family:var(--mono);font-size:.78rem;color:var(--muted);border-radius:10px;margin-bottom:1.7rem}
 
 /* trouble */
@@ -102,7 +112,7 @@ figcaption{font-family:var(--mono);font-size:.74rem;color:var(--muted);margin-to
 .trouble h3::before{content:"\26A0";color:var(--warn);margin-right:.45rem}
 
 /* toc */
-.toc{border:1px solid var(--line);background:var(--soft);border-radius:10px;padding:1.3rem;margin-bottom:2rem}
+.toc{border:1px solid var(--line);background:var(--soft);border-radius:var(--r);padding:1.3rem;margin-bottom:2rem}
 .toc h2{font-family:var(--mono);font-size:.74rem;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);margin-bottom:.85rem}
 .toc ol{margin:0;padding-left:1.25rem}
 .toc li{margin-bottom:.3rem;font-family:var(--mono);font-size:.85rem}
@@ -110,7 +120,7 @@ figcaption{font-family:var(--mono);font-size:.74rem;color:var(--muted);margin-to
 .toc a:hover{text-decoration:underline}
 
 /* footer */
-footer{border-top:1px solid var(--line);margin-top:3rem;background:var(--soft)}
+footer{border-top:1px solid var(--line);margin-top:3rem;background:rgba(255,255,255,.025)}
 footer .wrap{padding-block:1.5rem 2.2rem;display:flex;justify-content:space-between;gap:.8rem;flex-wrap:wrap;font-family:var(--mono);font-size:.75rem;color:var(--muted)}
 footer p{margin:0}
 
@@ -460,6 +470,79 @@ git push -u origin main</code></pre>
       redirect elsewhere: one for sale, an old brand pointing at a new one. Not for hosting.
     </p>
   </div>
+
+  <h3>4c &mdash; don&rsquo;t let the records get stuck</h3>
+  <p>
+    Almost every &ldquo;my domain doesn&rsquo;t resolve&rdquo; problem on a web3 domain comes
+    down to one of five things. None of them are your fault, all of them are avoidable, and
+    every one of them looks perfectly normal in the dashboard while doing nothing at all.
+    Read this list <em>before</em> you add records.
+  </p>
+
+  <div class="warn">
+    <strong>1. &ldquo;Stuck&rdquo; almost always means a dead key, not a slow one</strong>
+    <p>
+      If your domain sits on <code>34.22.218.54</code>, that&rsquo;s Freename&rsquo;s parking
+      page &mdash; it means the nameserver found no record it could use. It is not
+      &ldquo;propagating&rdquo; and it will not fix itself. Something is wrong with a key.
+      Go to <a href="#trouble-stuck">When it goes wrong</a> and work down the list.
+    </p>
+  </div>
+
+  <table>
+    <thead><tr><th>the trap</th><th>what you see</th><th>the fix</th></tr></thead>
+    <tbody>
+      <tr>
+        <td>A zone record left pointing at a <strong>key that doesn&rsquo;t exist</strong></td>
+        <td>Record looks perfect, domain parked forever</td>
+        <td>Delete that record and re-add it as a plain <code>A</code></td>
+      </tr>
+      <tr>
+        <td><strong>Capital letters</strong> in a record name</td>
+        <td>Row sits in the table doing nothing</td>
+        <td>Lowercase the key &mdash; <code>record.A.1</code>, never <code>RECORD.A.1</code></td>
+      </tr>
+      <tr>
+        <td>A record saved but <strong>never signed</strong></td>
+        <td>Saved, displayed, still no effect</td>
+        <td>Press <strong>Sign Transaction</strong> and confirm in your wallet</td>
+      </tr>
+      <tr>
+        <td>Using <strong>Update</strong> instead of delete&nbsp;+&nbsp;re-add</td>
+        <td>Half-written rows, duplicated entries</td>
+        <td>Always delete and re-add. Never edit a record in place.</td>
+      </tr>
+      <tr>
+        <td>Waiting <strong>under two minutes</strong></td>
+        <td>Looks broken, actually just lagging</td>
+        <td>Give it two minutes. Beyond that it&rsquo;s a real fault.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="ok">
+    <strong>The one that catches everyone</strong>
+    <p>
+      A DNS record can carry an internal pointer to an on-chain key. If that pointer names a
+      key you never created &mdash; a stray token name, a typo, a leftover from an earlier
+      setup &mdash; the nameserver reads it, finds nothing, and parks your domain. The record
+      itself looks flawless.
+    </p>
+    <p>
+      This is the single most common cause of a stuck web3 domain, and it is invisible in the
+      record table. <strong>Fix: delete the record and add it fresh, plain.</strong> If it
+      sticks again, check the key name character by character.
+    </p>
+  </div>
+
+  <div class="note">
+    <strong>Your 60-second health check</strong>
+    <p>
+      After adding records, run this. If it returns your GitHub IP, you&rsquo;re done. If it
+      returns <code>34.22.218.54</code>, something above went wrong.
+    </p>
+    <pre><code>nslookup -type=A yourdomain.virtualsociety ns1.noto.network</code></pre>
+  </div>
 </section>
 
 <!-- ============ 05 ============ -->
@@ -618,6 +701,22 @@ git push -u origin main</code></pre>
     <span class="step-n">!!</span>
     <h2 class="step-t">When it goes wrong</h2>
     <span class="step-m">Keep this</span>
+  </div>
+
+  <div class="trouble" id="trouble-stuck">
+    <h3>My domain is stuck on the parking page</h3>
+    <p>
+      If <code>nslookup</code> returns <code>34.22.218.54</code>, your domain is on
+      Freename&rsquo;s parking page and <strong>it will not fix itself</strong>. That address
+      means the nameserver found no usable record. Work down this list:
+    </p>
+    <ul class="plain">
+      <li><strong>Delete and re-add your <code>A</code> record.</strong> Do this first, every time. A zone record can carry an internal pointer to an on-chain key that doesn&rsquo;t exist, and only re-adding clears it.</li>
+      <li><strong>Check the key name</strong> on every record, letter by letter. A typo or a leftover token name is invisible in the table.</li>
+      <li><strong>Make sure it&rsquo;s signed.</strong> Unsigned records display perfectly and do nothing.</li>
+      <li><strong>Check capitalisation</strong> &mdash; <code>record.A.1</code> works, <code>RECORD.A.1</code> does not.</li>
+      <li><strong>Then wait two minutes.</strong> Only now. Under two minutes it&rsquo;s propagation; past two minutes it&rsquo;s a fault.</li>
+    </ul>
   </div>
 
   <div class="trouble">
