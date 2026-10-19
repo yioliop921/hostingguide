@@ -81,6 +81,11 @@ tbody tr:nth-child(even){background:var(--soft)}
 
 h3.sub{font-family:var(--mono);font-size:.76rem;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);margin:1.9rem 0 .7rem;padding-bottom:.45rem;border-bottom:1px solid var(--line)}
 
+figure{margin:0 0 1.5rem}
+figure img{display:block;width:100%;height:auto;border:1px solid var(--line2);border-radius:10px;background:#fff}
+figcaption{font-family:var(--mono);font-size:.7rem;line-height:1.55;color:var(--dim);margin-top:.55rem}
+figcaption b{color:var(--muted);font-weight:700}
+
 .toc{border:1px solid var(--line);background:var(--soft);border-radius:var(--r);padding:1.2rem;margin-bottom:.5rem}
 .toc ol{margin:0;padding-left:1.2rem}
 .toc li{font-family:var(--mono);font-size:.85rem}
@@ -161,7 +166,7 @@ footer p{margin:0}
     <thead><tr><th>part</th><th>who uses it</th><th>what it holds</th></tr></thead>
     <tbody>
       <tr><td>DNS zone record</td><td>Normal DNS lookups</td><td>One IP: <code>185.199.108.153</code></td></tr>
-      <tr><td>On-chain records</td><td>Web3 browsers</td><td>Four IPs, plus the redirect</td></tr>
+      <tr><td>On-chain records</td><td>Web3 browsers</td><td>The same one IP, plus the redirect</td></tr>
       <tr><td><code>CNAME</code> file</td><td>GitHub</td><td>Your domain, so GitHub answers for it</td></tr>
     </tbody>
   </table>
@@ -212,6 +217,11 @@ footer p{margin:0}
     <code>/ (root)</code>. Save.
   </p>
 
+  <figure>
+    <img src="shots/pages-source.png" alt="GitHub Pages settings showing Source set to Deploy from a branch, branch main, folder / (root)" loading="lazy" width="803" height="415">
+    <figcaption><b>Settings &rarr; Pages.</b> Source <code>Deploy from a branch</code>, branch <code>main</code>, folder <code>/ (root)</code>. The custom-domain box further down is step 2d.</figcaption>
+  </figure>
+
   <div class="box ok">
     <strong>Wait for the green check</strong>
     <p>
@@ -228,6 +238,11 @@ footer p{margin:0}
   </p>
   <pre><code>yourname.virtualsociety</code></pre>
   <p>Commit it to the same branch.</p>
+
+  <figure>
+    <img src="shots/repo-root.png" alt="GitHub repository file list showing exactly two files at the top level: CNAME and index.html" loading="lazy" width="1082" height="252">
+    <figcaption><b>The finished repo.</b> Two files at the top level, nothing else needed: <code>CNAME</code> and <code>index.html</code>.</figcaption>
+  </figure>
 
   <div class="box warn">
     <strong>Do not delete this file later</strong>
@@ -260,12 +275,18 @@ footer p{margin:0}
     </tbody>
   </table>
 
+  <figure>
+    <img src="shots/freename-dns.png" alt="Freename DNS Records tab showing NS records for Noto, a www CNAME to the GitHub Pages host, and one apex A record" loading="lazy" width="1164" height="608">
+    <figcaption><b>DNS Records tab.</b> Leave the two <code>NS</code> records alone &mdash; they point at Noto. Add the <code>CNAME</code> and the single <code>A</code>.</figcaption>
+  </figure>
+
   <div class="box">
     <strong>Why only one A record?</strong>
     <p>
       GitHub normally asks for four addresses. This zone allows a single apex
-      <code>A</code>, so we add one here and put the other three on-chain in the next
-      step. Nothing is lost &mdash; they are simply filed in the layer that has room.
+      <code>A</code>, and one is enough &mdash; it is the only one we need in either
+      layer. Do not add the other three anywhere; they change nothing and only give you
+      more places to make a mistake.
     </p>
   </div>
 
@@ -279,18 +300,30 @@ footer p{margin:0}
   </div>
 
   <h3 class="sub">3b &mdash; Web3 (on-chain) records</h3>
-  <p>These are the ones web3 browsers read. Add all five:</p>
+  <p>These are the ones web3 browsers read. Add exactly two:</p>
 
   <table>
     <thead><tr><th>key</th><th>value</th></tr></thead>
     <tbody>
       <tr><td>record.A.0</td><td>185.199.108.153</td></tr>
-      <tr><td>record.A.1</td><td>185.199.109.153</td></tr>
-      <tr><td>record.A.2</td><td>185.199.110.153</td></tr>
-      <tr><td>record.A.3</td><td>185.199.111.153</td></tr>
       <tr><td>redirect.WEBSITE.0</td><td>https://YOURNAME.github.io/REPO/</td></tr>
     </tbody>
   </table>
+
+  <div class="box ok">
+    <strong>Two records is the whole list</strong>
+    <p>
+      One address, one redirect. Adding <code>record.A.1</code> through
+      <code>record.A.3</code> is not required and has no effect &mdash; this exact pair
+      is what a working setup looks like. If you already added the extra three, delete
+      them; the site keeps working.
+    </p>
+  </div>
+
+  <figure>
+    <img src="shots/freename-web3.png" alt="Freename Web3 Records tab listing exactly two records: REDIRECT.WEBSITE.0 and RECORD.A.0" loading="lazy" width="1144" height="394">
+    <figcaption><b>Web3 Records tab &mdash; the complete list.</b> Two entries. Anything more is either redundant or a mistake.</figcaption>
+  </figure>
 
   <div class="box warn">
     <strong>Three things that silently do nothing</strong>
@@ -311,6 +344,11 @@ footer p{margin:0}
     Nothing is live until you do this. Freename will show a <strong>Sign Transaction</strong>
     button once your wallet is connected; press it and confirm.
   </p>
+
+  <figure>
+    <img src="shots/freename-sign.png" alt="Freename Records tab with the wallet connected and an orange Sign Transaction button at the bottom" loading="lazy" width="1202" height="706">
+    <figcaption><b>Records &rarr; Sign Transaction.</b> Until you press this, your records are a draft. The green <code>resolves</code> badge only means the name resolves &mdash; not that your changes are published.</figcaption>
+  </figure>
 
   <div class="box">
     <strong>Before you start: avoid the record that breaks everything</strong>
@@ -384,6 +422,24 @@ footer p{margin:0}
   <p>
     The <code>CNAME</code> file is missing, misspelled, or in the wrong folder. It must sit
     at the top level of the repo, named <code>CNAME</code>, with no extension.
+  </p>
+
+  <h3 class="sub">GitHub says &ldquo;DNS check unsuccessful&rdquo;</h3>
+  <p>
+    <strong>This is expected. Ignore it.</strong> GitHub checks your domain by looking it
+    up in the public DNS root, and an alt-root domain is not in that root &mdash; so the
+    check can never succeed, no matter how correct your records are.
+  </p>
+
+  <figure>
+    <img src="shots/github-dns-check.png" alt="GitHub Pages settings showing the custom domain with a red DNS check unsuccessful warning and an improperly configured notice" loading="lazy" width="804" height="268">
+    <figcaption><b>Harmless.</b> <code>DNS check unsuccessful</code> and <code>InvalidDomainError</code> appear on every correctly configured alt-root domain. The site still serves.</figcaption>
+  </figure>
+
+  <p>
+    Prove it with the <code>nslookup</code> and <code>curl</code> commands in step 4. If
+    those return your GitHub IP and your HTML, the setup is finished and this warning is
+    just noise.
   </p>
 
   <h3 class="sub">Your Pages address redirects to a dead page</h3>
