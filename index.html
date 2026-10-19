@@ -220,6 +220,22 @@ footer p{margin:0}
     </p>
   </div>
 
+  <h3 class="sub">Which half is broken</h3>
+  <p>
+    Almost every failure is one of three things, and you can name the culprit before you
+    change anything. Check the free <code>.github.io</code> address first: it tells you
+    whether the fault is GitHub or your records.
+  </p>
+
+  <table>
+    <thead><tr><th>what you see</th><th>which half is wrong</th></tr></thead>
+    <tbody>
+      <tr><td data-label="what you see">The site opens at <code>YOURNAME.github.io/REPO/</code></td><td data-label="which half is wrong">GitHub is fine. Everything left is records &rarr; step 3</td></tr>
+      <tr><td data-label="what you see">That <code>.github.io</code> address is a <code>404</code> too</td><td data-label="which half is wrong">GitHub: Pages, the branch, or the file name &rarr; step 2</td></tr>
+      <tr><td data-label="what you see">Your name answers <code>34.22.218.54</code></td><td data-label="which half is wrong">The name publishes nothing usable &rarr; step 5</td></tr>
+    </tbody>
+  </table>
+
   <h3 class="sub">What you need first</h3>
   <ul>
     <li>A GitHub account</li>
@@ -238,16 +254,24 @@ footer p{margin:0}
 
   <h3 class="sub">2a &mdash; Create the repo</h3>
   <p>
-    On GitHub, <strong>New repository</strong>. Name it anything. Tick
-    <strong>Add a README</strong> off. Create it.
+    On GitHub, <strong>New repository</strong>. Name it anything. Set it to
+    <strong>Public</strong> &mdash; Pages on a private repository is a paid feature. Leave
+    <strong>Add a README</strong> off and <strong>.gitignore</strong> at
+    <strong>None</strong>. Create it.
   </p>
 
   <h3 class="sub">2b &mdash; Upload your files</h3>
   <p>
-    Choose <strong>uploading an existing file</strong>, drag your folder in, commit.
-    Make sure <code>index.html</code> sits at the <em>top level</em> of the repo &mdash;
-    not inside a subfolder, or the site will 404.
+    In the empty repo choose <strong>uploading an existing file</strong>, drag your files
+    in, and commit. Two things matter:
   </p>
+  <ul>
+    <li><code>index.html</code> must sit at the <strong>top level</strong> of the repo and
+      be spelled exactly <code>index.html</code> &mdash; lowercase. In a subfolder, or
+      spelled <code>Index.html</code>, the site is a <code>404</code>.</li>
+    <li>Pages publishes the repository as it is, with no build step, so upload only files
+      you are happy for anyone to read.</li>
+  </ul>
 
   <h3 class="sub">2c &mdash; Turn on Pages</h3>
   <p>
@@ -291,6 +315,16 @@ footer p{margin:0}
       everything else is configured perfectly. It also makes GitHub redirect the
       <code>.github.io</code> address to your domain, which looks alarming but is correct
       and harmless.
+    </p>
+  </div>
+
+  <div class="box">
+    <strong>Going back to the .github.io address</strong>
+    <p>
+      Rename <code>CNAME</code> to <code>CNAME.disabled</code> and commit, and GitHub
+      serves <code>YOURNAME.github.io/REPO/</code> again. Remove the file altogether and
+      the custom host simply stops answering &mdash; that is the <code>404</code> in
+      step 5.
     </p>
   </div>
 </section>
@@ -338,6 +372,15 @@ footer p{margin:0}
     </p>
   </div>
 
+  <div class="box warn">
+    <strong>&ldquo;Enforce HTTPS&rdquo; will stay unavailable</strong>
+    <p>
+      GitHub only issues a certificate for a domain it can find in the public DNS root,
+      and your name is not in it. The checkbox never becomes usable, no matter how correct
+      your records are. That is the same alt-root limit as step 6.
+    </p>
+  </div>
+
   <h3 class="sub">3b &mdash; Web3 (on-chain) records</h3>
   <p>These are the ones web3 browsers read. Add exactly two:</p>
 
@@ -375,6 +418,18 @@ footer p{margin:0}
       <strong>The redirect must be a real URL.</strong> Point it at the public
       <code>.github.io</code> address &mdash; never at your own web3 domain, which
       cannot be reached from the ordinary web.
+    </p>
+  </div>
+
+  <div class="box">
+    <strong>Adding a record versus changing one</strong>
+    <p>
+      Freename matches a record by its key, so <code>record.A.0</code> is a row you edit,
+      not a list you append to. A value that is not an address will not work either: keep
+      it a bare IP, with no <code>http://</code> and no path. The URL belongs in
+      <code>redirect.WEBSITE.0</code> and nowhere else. After any change,
+      <strong>sign again</strong> &mdash; an unsigned edit is a draft, exactly like the
+      first one.
     </p>
   </div>
 
@@ -434,6 +489,26 @@ footer p{margin:0}
       redirect exists to work around.
     </p>
   </div>
+
+  <h3 class="sub">Or check it in a browser, with nothing installed</h3>
+  <p>
+    Two tools on the registry&rsquo;s own site read the same nameservers this step does,
+    so you can confirm the answer without a terminal &mdash; and they work for any
+    registered <code>.virtualsociety</code> name, not just yours.
+  </p>
+
+  <table>
+    <thead><tr><th>tool</th><th>what it tells you</th></tr></thead>
+    <tbody>
+      <tr><td data-label="tool"><a href="https://virtualsociety.top/tool/dnscheck">DNS records</a></td><td data-label="what it tells you">The raw records Noto publishes for a name, read straight from the authoritative servers. Path: <code>virtualsociety.top/tool/dnscheck</code></td></tr>
+      <tr><td data-label="tool"><a href="https://virtualsociety.top/getweb2link">Get a web2 link</a></td><td data-label="what it tells you">The ordinary-web address that serves that name. Path: <code>virtualsociety.top/getweb2link</code></td></tr>
+    </tbody>
+  </table>
+
+  <figure>
+    <a class="shot" href="shots/dns-check.png" target="_blank" rel="noopener"><img src="shots/dns-check.png" alt="DNS records tool showing hostingguide.virtualsociety with one A record at 185.199.108.153, every other type none published, and NS1 and NS2 at ns1.noto.network and ns2.noto.network" loading="lazy" width="1460" height="1080"></a>
+    <figcaption><b>What Noto publishes.</b> The same answer the <code>nslookup</code> returns: one <code>A</code>, everything else <code>none published</code>, and the two Noto nameservers. Anything different here is the thing to fix.</figcaption>
+  </figure>
 </section>
 
 <!-- ============ 5 ============ -->
@@ -457,6 +532,34 @@ footer p{margin:0}
     <li><strong>Only then wait two minutes.</strong> Under two minutes is propagation. Past two minutes is a fault.</li>
   </ol>
 
+  <div class="box warn">
+    <strong>If the same value will not take</strong>
+    <p>
+      Re-saving a value that has not changed can be treated as no change at all. Set the
+      record to GitHub&rsquo;s second address, <code>185.199.109.153</code>, sign, wait two
+      minutes, then set it back to <code>185.199.108.153</code> and sign again. GitHub
+      answers on any of its four addresses, so if the site comes up while the record holds
+      the second value, leave it there &mdash; one working address is the whole
+      requirement.
+    </p>
+  </div>
+
+  <h3 class="sub">The record saved but nothing moved</h3>
+  <p>
+    Freename keeps a key exactly as you typed it and matches it literally. A key that
+    looks almost right saves without complaint and is never used:
+  </p>
+
+  <table>
+    <thead><tr><th>key you typed</th><th>what happens</th></tr></thead>
+    <tbody>
+      <tr><td data-label="key you typed"><code>record.A.0</code></td><td class="keep" data-label="what happens">Correct, and matched</td></tr>
+      <tr><td data-label="key you typed"><code>RECORD.A.0</code></td><td class="drop" data-label="what happens"><span class="strike">Saves, appears in the list, ignored</span></td></tr>
+      <tr><td data-label="key you typed"><code>record.A</code> &middot; <code>A.0</code></td><td class="drop" data-label="what happens"><span class="strike">Never used</span></td></tr>
+      <tr><td data-label="key you typed"><code>redirect.WEBSITE</code></td><td class="drop" data-label="what happens"><span class="strike">Missing the <code>.0</code> &mdash; ignored</span></td></tr>
+    </tbody>
+  </table>
+
   <h3 class="sub">GitHub returns 404 for your domain</h3>
   <p>
     The <code>CNAME</code> file is missing, misspelled, or in the wrong folder. It must sit
@@ -476,9 +579,9 @@ footer p{margin:0}
   </figure>
 
   <p>
-    Prove it with the <code>nslookup</code> and <code>curl</code> commands in step 4. If
-    those return your GitHub IP and your HTML, the setup is finished and this warning is
-    just noise.
+    Prove it with the <code>nslookup</code> and <code>curl</code> commands in step 4, or
+    the registry&rsquo;s DNS tool. If those return your GitHub IP and your HTML, the setup
+    is finished and this warning is just noise.
   </p>
 
   <h3 class="sub">Your Pages address redirects to a dead page</h3>
@@ -515,7 +618,7 @@ footer p{margin:0}
     <tbody>
       <tr>
         <td data-label="you want">A site anyone can open</td>
-        <td data-label="what works">Use the <code>.github.io</code> address, or your own normal domain pointed at GitHub</td>
+        <td data-label="what works">The <code>.github.io</code> address, the registry&rsquo;s web2 mirror below, or your own normal domain pointed at GitHub</td>
       </tr>
       <tr>
         <td data-label="you want">A web3 browser to open it</td>
@@ -523,10 +626,30 @@ footer p{margin:0}
       </tr>
       <tr>
         <td data-label="you want">Both</td>
-        <td data-label="what works">Host in both places, or mirror the <code>.github.io</code> address under a normal domain</td>
+        <td data-label="what works">Host in both places, or use the mirror &mdash; it needs no second copy of your files</td>
       </tr>
     </tbody>
   </table>
+
+  <h3 class="sub">The web2 mirror you already have</h3>
+  <p>
+    Every registered <code>.virtualsociety</code> name is also served on the ordinary web
+    at <code>&lt;name&gt;.virtualsociety.top</code>, over normal HTTPS, from a proxy in
+    front of your GitHub Pages site. There is nothing to configure and nothing to keep in
+    sync.
+  </p>
+  <pre><code>https://yourname.virtualsociety.top/</code></pre>
+  <p>
+    A name that has nothing published yet opens a holding page there instead, which is how
+    you can tell the two apart. Relative links keep working, because the mirror rewrites
+    them; the one thing it cannot rescue is an absolute URL that hard-codes your web3
+    name.
+  </p>
+
+  <figure>
+    <a class="shot" href="shots/web2-link.png" target="_blank" rel="noopener"><img src="shots/web2-link.png" alt="Get a web2 link tool showing hostingguide.virtualsociety resolved, claimed yes, delegated yes, and the web2 link https://hostingguide.virtualsociety.top/" loading="lazy" width="1460" height="1210"></a>
+    <figcaption><b>The mirror, verified.</b> This is hostingguide&rsquo;s own name &mdash; the guide you are reading &mdash; resolved through the registry&rsquo;s web2-link tool. The link it returns is an address any browser can open.</figcaption>
+  </figure>
 
   <div class="box">
     <strong>On Obian specifically</strong>
@@ -534,7 +657,8 @@ footer p{margin:0}
       Obian resolves the domain to an IP and then requests that IP on its own, without
       telling GitHub which site it wants. GitHub cannot answer that &mdash; it serves
       thousands of sites and needs the name to pick one &mdash; so you get a 404. No
-      record setting changes this. If a site must open in Obian, host it somewhere whose
+      record setting changes this, and the mirror does not either: it is a web2 address,
+      not part of the name itself. If a site must open in Obian, host it somewhere whose
       IP answers without a hostname, such as Vercel.
     </p>
   </div>
@@ -546,7 +670,7 @@ footer p{margin:0}
 <footer>
   <div class="wrap">
     <p>virtualsociety &mdash; hostingguide.virtualsociety</p>
-    <p>Built and tested on GitHub Pages + Freename</p>
+    <p>Tools: <a href="https://virtualsociety.top/tool/dnscheck">DNS records</a> &middot; <a href="https://virtualsociety.top/getweb2link">web2 link</a></p>
   </div>
 </footer>
 
