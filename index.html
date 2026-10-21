@@ -45,6 +45,7 @@ li::marker{color:var(--brand)}
 p,li,td,th,figcaption,summary{overflow-wrap:break-word}
 
 header{border-bottom:1px solid var(--line);background:rgba(6,7,12,.85);backdrop-filter:blur(12px);position:sticky;top:0;z-index:50}
+.step[id]{scroll-margin-top:78px}
 .nav{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding-block:13px;flex-wrap:wrap}
 .brand{display:flex;align-items:center;gap:.55rem;font-family:var(--mono);font-weight:700;font-size:.9rem;text-decoration:none;color:var(--ink)}
 .mark{width:10px;height:10px;background:linear-gradient(135deg,var(--brand),var(--brand2));border-radius:3px}
@@ -111,11 +112,13 @@ footer p{margin:0}
 @media(max-width:560px){
   :root{--pad:16px}
   body{font-size:15.5px;line-height:1.65}
-  header{position:static}
-  .nav{flex-wrap:wrap;gap:.35rem .6rem;padding-block:10px}
+  header{position:sticky;top:0}
+  .nav{flex-wrap:nowrap;gap:.55rem;padding-block:9px;align-items:center}
   .brand{font-size:.82rem;flex:none}
-  .navlinks{flex:1 0 100%;flex-wrap:wrap;justify-content:flex-start;gap:.35rem .9rem}
+  .navlinks{flex:1 1 auto;min-width:0;flex-wrap:nowrap;justify-content:flex-start;gap:.85rem;overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding-block:2px}
+  .navlinks::-webkit-scrollbar{display:none}
   .navlinks a{white-space:nowrap;padding-block:.2rem;font-size:.66rem;letter-spacing:.07em}
+  .step[id]{scroll-margin-top:58px}
   .hero{padding-block:32px 22px}
   .step-head{gap:.55rem}
   .step-m{flex-basis:100%;margin-top:-.15rem}
