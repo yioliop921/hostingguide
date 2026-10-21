@@ -115,7 +115,7 @@ footer p{margin:0}
   header{position:sticky;top:0}
   .nav{row-gap:.4rem;column-gap:.6rem;padding-block:9px}
   .brand{flex:1 0 100%;font-size:.8rem}
-  .navlinks{display:flex;flex:1 0 100%;flex-wrap:nowrap;column-gap:.4rem}
+  .navlinks{display:flex;flex:1 0 100%;flex-wrap:wrap;justify-content:space-between;column-gap:.4rem}
   .navlinks a{flex:1 1 0;min-width:max-content;text-align:center;white-space:nowrap;padding-block:.15rem;font-size:.63rem;letter-spacing:.05em}
   .step[id]{scroll-margin-top:96px}
   .hero{padding-block:32px 22px}
@@ -141,6 +141,11 @@ footer p{margin:0}
   td:not([data-label])::before{display:none}
   td.keep{opacity:1}
   td.drop{opacity:.9}
+}
+@media(max-width:380px){
+  /* very narrow phones: tighten the links so all five stay on one row */
+  .navlinks{column-gap:.25rem}
+  .navlinks a{font-size:.58rem;letter-spacing:.03em}
 }
 @media(prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}
