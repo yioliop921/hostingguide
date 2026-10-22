@@ -116,7 +116,7 @@ footer p{margin:0}
   .nav{row-gap:.4rem;column-gap:.6rem;padding-block:9px}
   .brand{flex:1 0 100%;font-size:.8rem}
   .navlinks{display:flex;flex:1 0 100%;flex-wrap:wrap;justify-content:space-between;column-gap:.4rem}
-  .navlinks a{flex:1 1 0;min-width:max-content;text-align:center;white-space:nowrap;padding-block:.15rem;font-size:.63rem;letter-spacing:.05em}
+  .navlinks a{flex:1 1 0;min-width:max-content;text-align:center;white-space:nowrap;padding-block:.15rem;font-size:min(.72rem,3.6vw);letter-spacing:.05em}
   .step[id]{scroll-margin-top:96px}
   .hero{padding-block:32px 22px}
   .step-head{gap:.55rem}
@@ -143,9 +143,8 @@ footer p{margin:0}
   td.drop{opacity:.9}
 }
 @media(max-width:380px){
-  /* very narrow phones: tighten the links so all five stay on one row */
+  /* narrower phones: tighten the gaps so all five labels stay on one row */
   .navlinks{column-gap:.25rem}
-  .navlinks a{font-size:min(.58rem,3.2vw);letter-spacing:.03em}
 }
 @media(max-width:300px){
   /* extreme widths: the labels scale with the screen, so the row never wraps */
