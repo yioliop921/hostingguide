@@ -145,7 +145,11 @@ footer p{margin:0}
 @media(max-width:380px){
   /* very narrow phones: tighten the links so all five stay on one row */
   .navlinks{column-gap:.25rem}
-  .navlinks a{font-size:.58rem;letter-spacing:.03em}
+  .navlinks a{font-size:min(.58rem,3.2vw);letter-spacing:.03em}
+}
+@media(max-width:300px){
+  /* extreme widths: the labels scale with the screen, so the row never wraps */
+  .navlinks{column-gap:.2rem}
 }
 @media(prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}
