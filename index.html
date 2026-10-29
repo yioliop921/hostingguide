@@ -273,7 +273,7 @@ footer p{margin:0}
   <h3 class="sub">2b &mdash; Upload your files</h3>
   <p>
     In the empty repo choose <strong>uploading an existing file</strong>, drag your files
-    in, and commit. Two things matter:
+    in, and commit. Three things matter:
   </p>
   <ul>
     <li><code>index.html</code> must sit at the <strong>top level</strong> of the repo and
@@ -281,6 +281,9 @@ footer p{margin:0}
       spelled <code>Index.html</code>, the site is a <code>404</code>.</li>
     <li>Pages publishes the repository as it is, with no build step, so upload only files
       you are happy for anyone to read.</li>
+    <li>If any file or folder name starts with an underscore, add an <strong>empty</strong>
+      file called <code>.nojekyll</code> at the top level. Without it GitHub silently drops
+      every underscore-prefixed name &mdash; no error, the file is simply never published.</li>
   </ul>
 
   <h3 class="sub">2c &mdash; Turn on Pages</h3>
@@ -314,7 +317,7 @@ footer p{margin:0}
 
   <figure>
     <a class="shot" href="shots/repo-root.png" target="_blank" rel="noopener"><img src="shots/repo-root.png" alt="GitHub repository file list showing exactly two files at the top level: CNAME and index.html" loading="lazy" width="1082" height="252"></a>
-    <figcaption><b>The finished repo.</b> Two files at the top level, nothing else needed: <code>CNAME</code> and <code>index.html</code>.</figcaption>
+    <figcaption><b>The finished repo.</b> Two files at the top level, and nothing else needed for a simple site: <code>CNAME</code> and <code>index.html</code>. Add <code>.nojekyll</code> only if you have underscore-prefixed names.</figcaption>
   </figure>
 
   <div class="box warn">
@@ -406,9 +409,9 @@ footer p{margin:0}
     <strong>Two records is the whole list</strong>
     <p>
       One address, one redirect. Adding <code>record.A.1</code> through
-      <code>record.A.3</code> is not required and has no effect &mdash; this exact pair
-      is what a working setup looks like. If you already added the extra three, delete
-      them; the site keeps working.
+      <code>record.A.3</code> is not required &mdash; one address is enough and the extra
+      three change nothing. If you already added them, deleting them is optional: the site
+      keeps working either way.
     </p>
   </div>
 
@@ -424,7 +427,8 @@ footer p{margin:0}
       <code>record.A.0</code>. Written <code>RECORD.A.0</code> it saves, appears in your
       list, and is ignored.<br>
       <strong>Trailing slashes.</strong> The redirect value ends with <code>/</code>.
-      Without it the browser may be sent to a folder listing.<br>
+      Without it GitHub redirects to the slash form first &mdash; an extra hop, not a
+      failure, but keep it, because that is the canonical address.<br>
       <strong>The redirect must be a real URL.</strong> Point it at the public
       <code>.github.io</code> address &mdash; never at your own web3 domain, which
       cannot be reached from the ordinary web.
@@ -434,12 +438,17 @@ footer p{margin:0}
   <div class="box">
     <strong>Adding a record versus changing one</strong>
     <p>
-      Freename matches a record by its key, so <code>record.A.0</code> is a row you edit,
-      not a list you append to. A value that is not an address will not work either: keep
-      it a bare IP, with no <code>http://</code> and no path. The URL belongs in
-      <code>redirect.WEBSITE.0</code> and nowhere else. After any change,
-      <strong>sign again</strong> &mdash; an unsigned edit is a draft, exactly like the
-      first one.
+      The key is the record&rsquo;s identity, so <code>record.A.0</code> is one row, not a
+      list you append to &mdash; and a second row spelled slightly differently is a second,
+      separate record. A value that is not an address will not work either: keep it a bare
+      IP, with no <code>http://</code> and no path. The URL belongs in
+      <code>redirect.WEBSITE.0</code> and nowhere else.
+    </p>
+    <p>
+      Prefer deleting and re-adding to editing in place: an edit can leave the record
+      pointing at a stale chain slot, so it stops being served while still looking perfect.
+      After any change, <strong>sign again</strong> &mdash; an unsigned edit is a draft,
+      exactly like the first one.
     </p>
   </div>
 
@@ -493,10 +502,15 @@ footer p{margin:0}
     <strong>You are finished when all three are true</strong>
     <p>
       The <code>nslookup</code> returns your GitHub IP, the <code>curl</code> prints your
-      HTML, and opening <code>https://YOURNAME.github.io/REPO/</code> in a normal browser
-      shows your site. Alt-root domains have no public DNS and no public certificate, so
-      they will never load in a stock browser &mdash; that is expected and is what the
-      redirect exists to work around.
+      HTML, and <code>https://yourname.virtualsociety.top/</code> &mdash; the web2 mirror
+      from step 6 &mdash; shows your site in a normal browser.
+    </p>
+    <p>
+      Do not use the <code>.github.io</code> address for that last check once
+      <code>CNAME</code> exists: GitHub 301s it to your web3 domain, which a stock browser
+      cannot load, so it will look broken even when everything is correct. Alt-root domains
+      have no public DNS and no public certificate &mdash; that is expected, and the redirect
+      is what works around it.
     </p>
   </div>
 
@@ -516,8 +530,8 @@ footer p{margin:0}
   </table>
 
   <figure>
-    <a class="shot" href="shots/dns-check.png" target="_blank" rel="noopener"><img src="shots/dns-check.png" alt="DNS records tool showing hostingguide.virtualsociety with one A record at 185.199.108.153, every other type none published, and NS1 and NS2 at ns1.noto.network and ns2.noto.network" loading="lazy" width="1460" height="1080"></a>
-    <figcaption><b>What Noto publishes.</b> The same answer the <code>nslookup</code> returns: one <code>A</code>, everything else <code>none published</code>, and the two Noto nameservers. Anything different here is the thing to fix.</figcaption>
+    <a class="shot" href="shots/dns-check.png" target="_blank" rel="noopener"><img src="shots/dns-check.png" alt="DNS records tool showing hostingguide.virtualsociety with one A record at 185.199.108.153, CNAME not published in this capture, and NS1 and NS2 at ns1.noto.network and ns2.noto.network" loading="lazy" width="1460" height="1080"></a>
+    <figcaption><b>What Noto publishes.</b> The same answer the <code>nslookup</code> returns: one <code>A</code>, the two Noto nameservers, and &mdash; only if you added the optional <code>www</code> row in step 3a &mdash; a <code>CNAME</code>. <code>AAAA</code>, <code>MX</code> and <code>TXT</code> empty is normal. Anything else different here is the thing to fix.</figcaption>
   </figure>
 </section>
 
@@ -664,12 +678,16 @@ footer p{margin:0}
   <div class="box">
     <strong>On Obian specifically</strong>
     <p>
-      Obian resolves the domain to an IP and then requests that IP on its own, without
-      telling GitHub which site it wants. GitHub cannot answer that &mdash; it serves
-      thousands of sites and needs the name to pick one &mdash; so you get a 404. No
-      record setting changes this, and the mirror does not either: it is a web2 address,
-      not part of the name itself. If a site must open in Obian, host it somewhere whose
-      IP answers without a hostname, such as Vercel.
+      Obian opens your site from the <strong>redirect record</strong>, not by asking for the
+      bare IP. If <code>redirect.WEBSITE.0</code> is missing &mdash; or was written with the
+      wrong capitals, so it sits under a key nothing reads &mdash; Obian has no address to
+      open, and that is the 404. It is the same record you set in step 3b, which is why a
+      correct setup opens in Obian and a half-correct one does not.
+    </p>
+    <p>
+      Changing host does not help: a bare IP request answers 404 at GitHub and 308 at Vercel,
+      so no host serves a site once the redirect record is wrong. Fix the record &mdash;
+      delete it, re-add it in the exact case, sign again &mdash; and give it two minutes.
     </p>
   </div>
 </section>
